@@ -1,5 +1,9 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
+enum roles {
+  ADMIN = "ADMIN",
+  STUDENT = "STUDENT"
+}
 export class AuthRegister {
   @IsString()
   @IsNotEmpty()
@@ -12,4 +16,8 @@ export class AuthRegister {
   @IsString()
   @IsNotEmpty()
   phoneNumber: string;
+
+  @IsString()
+  @IsNotEmpty()
+  role: roles;
 }

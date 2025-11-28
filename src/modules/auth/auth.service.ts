@@ -39,7 +39,7 @@ export class AuthService {
 
     const correctPassword = await bcrypt.compare(payload.password, existUser.password);
     if (!correctPassword) throw new NotFoundException("User phone or password not fount");
-    const [password, ...rest] = existUser
+    const { password, ...rest } = existUser
     return { success: true, message: 'User login successfully', data: rest};
     
   }

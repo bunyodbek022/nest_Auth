@@ -19,7 +19,7 @@ export class MyHttpFilterExeption implements ExceptionFilter {
     return res.status(status).json({
       success: false,
       status: status,
-      message: message,
+      message,
       path: req.path,
       timestamp: new Date().toISOString(),
     });
