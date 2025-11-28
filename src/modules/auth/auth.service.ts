@@ -1,8 +1,9 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, ParseIntPipe } from '@nestjs/common';
 import { AuthRegister } from './dto/register.dto';
 import { MyErrorExeption } from 'src/middleware/MyErrors';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/logim.dto';
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class AuthService {
@@ -21,6 +22,7 @@ export class AuthService {
     const existUser = await this.arr.find((obj) => obj.phoneNumber = payload.phoneNumber);
     if (existUser) throw new ConflictException()
     const newId = this.arr.length ? this.arr[this.arr.length - 1].id + 1 : 1;
+    payload.password = await bcrypt.hash(payload.password, 10);
     const newUser = {
       id: newId,
       ...payload
@@ -32,6 +34,13 @@ export class AuthService {
   }
 
   async login(payload: LoginDto) {
+    const existUser = await this.arr.find((obj) => obj.phoneNumber = payload.phoneNumber);
+    if (!existUser) throw new NotFoundException("User not register");
+
+    const correctPassword = await bcrypt.compare(payload.password, existUser.password);
+    if (!correctPassword) throw new NotFoundException("User phone or password not fount");
+    const [password, ...rest] = existUser
+    return { success: true, message: 'User login successfully', data: rest};
     
   }
 }
